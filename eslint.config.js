@@ -11,7 +11,11 @@ export default [
     name: 'app/files-to-ignore',
     ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
   },
-
-  js.configs.recommended,
-  ...pluginVue.configs['flat/essential'],
+  {
+    ...js.configs.recommended,
+    ...pluginVue.configs['flat/essential'],
+    rules: {
+      'vue/multi-word-component-names': 'off', // 关闭组件多词命名规则
+    },
+  },
 ]
