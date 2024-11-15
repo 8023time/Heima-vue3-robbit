@@ -1,7 +1,10 @@
 import resquesthttps from '@/utils/http.js'
 
-export function getbannerpicture () {
-    return resquesthttps.get('/home/banner')
+export function getbannerpicture (params = {}) {
+    const { distributionSite = '1' } = params
+    return resquesthttps.get('/home/banner',{
+    params:{distributionSite}
+    })
 }
 
 export function getnewgoods () {
