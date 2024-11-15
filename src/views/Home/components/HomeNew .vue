@@ -27,7 +27,6 @@ onMounted(() => {
         </ul>
     </HomePanel>
 
-
   <!-- 下面是插槽主体内容模版
   <ul class="goods-list">
     <li v-for="item in newList" :key="item.id">

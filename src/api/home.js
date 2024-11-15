@@ -7,3 +7,17 @@ export function getbannerpicture () {
 export function getnewgoods () {
     return resquesthttps.get('/home/new')
 }
+
+export function gethotgoodslist () {
+    return resquesthttps.get('/home/hot')
+}
+
+export function getdoodsapi () {
+    return resquesthttps.get('')
+}
+
+export const getGoodsAPI = () => {
+    return resquesthttps({
+      url: '/home/goods'
+    })
+  }
