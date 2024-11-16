@@ -1,37 +1,17 @@
 <script setup>
-import { getcategorylistdata } from '@/api/category';
-import { ref } from 'vue'
-import { getbannerpicture } from '@/api/home';
-import { onMounted } from 'vue'
-import { onUpdated } from 'vue'
-import { useRoute } from 'vue-router';
 import GoodsItem from '../Home/components/GoodsItem.vue';
+import { onBeforeRouteUpdate } from 'vue-router'
+import { usebannerdata } from './components/useBanner';
+import { usecategorydata } from './components/useCategory';
 
-const categorylist = ref([])
-const route =useRoute()
-const getcategorydata = async () => {
-  const res = await getcategorylistdata(route.params.id)
-  categorylist.value = res.result
-}
-onMounted(
-  () => {
-    getcategorydata()
-  }
-)
-onUpdated(
-  () => {
-    getcategorydata()
-  }
-)
 
-const bannercategorydata = ref()
-const getbannerdata = async () => {
-  const res = await getbannerpicture()
-  bannercategorydata.value = res.result
-}
-onMounted(
-  () => {
-    getbannerdata()
+const { bannercategorydata } = usebannerdata()
+const { categorylist,getcategorydata } = usecategorydata()
+
+onBeforeRouteUpdate(
+  (to) => {
+    console.log("路由切换了!!");
+    getcategorydata(to.params.id)
   }
 )
 </script>
@@ -59,7 +39,7 @@ onMounted(
       <h3>全部分类</h3>
       <ul>
         <li v-for="i in categorylist.children" :key="i.id">
-          <RouterLink to="/">
+          <RouterLink :to="`/Category/sub/${i.id}`">
             <img :src="i.picture" />
             <p>{{ i.name }}</p>
           </RouterLink>
