@@ -8,3 +8,14 @@ export const getgoodsinformation = (id) => {
         }
       })
 }
+
+export const getchHotGoodsAPI = ({ id, type, limit = 3 }) => {
+  return resquest({
+    url:'/goods/hot',
+    params:{
+      id, 
+      type, 
+      limit
+    }
+  })
+}

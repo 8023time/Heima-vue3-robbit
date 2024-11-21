@@ -15,7 +15,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <HomePanel title="新的标题" message="一些消息">
+    <HomePanel title="新鲜好物" message="一些关于新鲜好物的信息">
         <ul class="goods-list">
             <li v-for="item in newgoods" :key="item.id">
                 <RouterLink :to="`/detail/${item.id}`">
