@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { getgoodsinformation } from '@/api/detail';
+import  XtxSku from '@/components/XtxSku/index.vue' 
 import DetailHot from './components/DetailHot.vue';
 import ImageView from '@/components/ImageView/index.vue'
 import { useRoute } from 'vue-router'
@@ -17,6 +18,12 @@ onMounted(
     getgoodsdata()
   }
 )
+
+// 下面的是对sku组件的一些事件的绑定情况
+const getskuinformation = (data) => {
+  console.log(data);
+  
+}
 </script>
 
 <template>
@@ -38,7 +45,7 @@ onMounted(
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-                  <ImageView></ImageView>
+                  <ImageView :imageList="goodsinformation.mainPictures"></ImageView>
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
@@ -87,7 +94,7 @@ onMounted(
                 </dl>
               </div>
               <!-- sku组件 -->
-
+              <XtxSku :goods="goodsinformation" @change="getskuinformation"></XtxSku>
               <!-- 数据组件 -->
 
               <!-- 按钮组件 -->

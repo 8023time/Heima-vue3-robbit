@@ -1,19 +1,55 @@
 <script setup>
 // 图片列表
-const imageList = [
-  "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
-  "https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg",
-  "https://yanxuan-item.nosdn.127.net/b52c447ad472d51adbdde1a83f550ac2.jpg",
-  "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
-  "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
-]
-
+defineProps({
+  imageList:{
+    type:Array,
+    default:() =>[]
+  }
+})
+import { useMouseInElement } from '@vueuse/core'
 import { ref } from 'vue'
+import { watch } from 'vue'
 
 const imagenumber = ref(0)
 const changeimage = (data) => {
-    imagenumber.value = data
+  imagenumber.value = data
 }
+// 获取鼠标的相对位置
+const target = ref(null)
+const { elementX ,elementY ,isOutside} = useMouseInElement(target)
+
+// 控制蒙层小滑块的位置,通过watch监听来实现这一个功能
+const Left = ref(0)
+const Top = ref(0)
+
+// 下面的就是这个大图的一些效果
+const positionx = ref(0) 
+const positiony = ref(0)
+
+watch([elementX,elementY,isOutside],()=>{
+  // 在这里就可以实现对蒙块的位置
+  if(isOutside.value)return
+  if(elementX.value > 100 && elementX.value < 300) {
+    Left.value = elementX.value - 100;
+  }
+  if(elementY.value > 100 && elementY.value <300) {
+    Top.value = elementY.value - 100;
+  }
+  if(elementX.value < 100) {
+    Left.value = 0
+  }
+  if(elementY.value < 100){
+    Top.value = 0
+  }
+  if(elementX.value >300) {
+    Left.value = 200;
+  }
+  if(elementY.value > 300) {
+    Top.value = 200;
+  }
+  positionx.value =-Left.value*2
+  positiony.value =-Top.value*2
+})
 </script>
 
 
@@ -23,7 +59,7 @@ const changeimage = (data) => {
     <div class="middle" ref="target">
       <img :src="imageList[imagenumber]" alt="" />
       <!-- 蒙层小滑块 -->
-      <div class="layer" :style="{ left: `0px`, top: `0px` }"></div>
+      <div class="layer" v-show="!isOutside" :style="{ left: `${Left}px`, top: `${Top}px` }"></div>
     </div>
     <!-- 小图列表 -->
     <ul class="small">
@@ -34,11 +70,11 @@ const changeimage = (data) => {
     <!-- 放大镜大图 -->
     <div class="large" :style="[
       {
-        backgroundImage: `url(${imageList[0]})`,
-        backgroundPositionX: `0px`,
-        backgroundPositionY: `0px`,
+        backgroundImage: `url(${imageList[imagenumber]})`,
+        backgroundPositionX: `${positionx}px`,
+        backgroundPositionY: `${positiony}px`,
       },
-    ]" v-show="false"></div>
+    ]" v-show="!isOutside"></div>
   </div>
 </template>
 
@@ -51,6 +87,7 @@ const changeimage = (data) => {
 
   .middle {
     width: 400px;
+    // position: absolute;
     height: 400px;
     background: #f5f5f5;
   }

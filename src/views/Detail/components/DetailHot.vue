@@ -27,6 +27,8 @@ const typedata = {
 }
 const title =  computed(()=>{return typedata[datanumber.data]})
 onMounted(()=>{getgoodsinformationlist()})
+
+
 </script>
 
 
