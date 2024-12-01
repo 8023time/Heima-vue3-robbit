@@ -1,6 +1,6 @@
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 // import { UseUserStore } from '@/stores' 
-// import { ElMessage } from 'element-plus'
 // import router from '@/router'
 
 const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net'
@@ -18,6 +18,8 @@ instance.interceptors.request.use(config => {
 
 // axios响应式拦截器
 instance.interceptors.response.use(res => res.data, e => {
+  // 统一的错误消息提示在这里
+  ElMessage.warning(e.response.data.msg)
   return Promise.reject(e)
 })
 

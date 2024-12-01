@@ -1,10 +1,15 @@
 <script setup>
 import { ref } from 'vue'
+import { loginuserinformation } from '@/api/user';
+import { ElMessage } from 'element-plus'
+import "element-plus/theme-chalk/el-message.css";
+import { useRouter } from 'vue-router'
 
 // 表单校验功能模块
 const forminformation = ref({
     account:'',
-    password:''
+    password:'',
+    agree: true
 })
 
 // 准备一些校验的规则在里面
@@ -15,7 +20,39 @@ const rules = {
     password:[
         {required: true, message:'密码不能为空', trigger:'blur'},
         {min: 6, max: 14, message:'密码必须为6-14位的字母或者数字', trigger:'blur'}
+    ],
+    agree:[
+        {validator:(rules,value,callback) => {
+           if(value) {
+            callback()
+           } else {
+            callback(new Error('请先勾选协议'))
+           }
+           
+        }}
     ]
+}
+
+// 表单的校验功能
+// 统一校验,可以防止一些用户跳过登录的一些信息的输入功能就可以实现`这个功能
+const refform = ref(null)
+const route = useRouter()
+const loginxiaotuxian = () => {
+    const data = {
+        account: forminformation.value.account,
+        password: forminformation.value.password
+    }
+    refform.value.validate(
+        async (value) => {
+            if(value) {
+                // 在这里的话就是这个可以实现的就是这个获取后台数据的一个统一出发的地方
+                await loginuserinformation(data)
+                ElMessage.success('登录成功');
+                route.push('/')
+            }
+        }
+    )
+    
 }
 </script>
 
@@ -41,7 +78,7 @@ const rules = {
         </nav>
         <div class="account-box">
           <div class="form">
-            <el-form :module="forminformation" :rules="rules" label-position="right" label-width="60px"
+            <el-form ref="refform" :model="forminformation" :rules="rules" label-position="right" label-width="60px"
               status-icon>
               <el-form-item  label="账户" prop="account">
                 <el-input v-model="forminformation.account"/>
@@ -49,12 +86,12 @@ const rules = {
               <el-form-item label="密码" prop="password">
                 <el-input v-model="forminformation.password"/>
               </el-form-item>
-              <el-form-item label-width="22px">
-                <el-checkbox  size="large">
+              <el-form-item label-width="22px" prop="agree">
+                <el-checkbox v-model="forminformation.agree"  size="large">
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="loginxiaotuxian">点击登录</el-button>
             </el-form>
           </div>
         </div>
