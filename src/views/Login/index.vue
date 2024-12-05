@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { loginuserinformation } from '@/api/user';
+// import { loginuserinformation } from '@/api/user';
 import { ElMessage } from 'element-plus'
 import "element-plus/theme-chalk/el-message.css";
 import { useRouter } from 'vue-router'
+import { UseUserStore } from '@/stores/usre';
 
 // 表单校验功能模块
 const forminformation = ref({
@@ -28,7 +29,7 @@ const rules = {
            } else {
             callback(new Error('请先勾选协议'))
            }
-           
+
         }}
     ]
 }
@@ -36,6 +37,7 @@ const rules = {
 // 表单的校验功能
 // 统一校验,可以防止一些用户跳过登录的一些信息的输入功能就可以实现`这个功能
 const refform = ref(null)
+const userstore = UseUserStore()
 const route = useRouter()
 const loginxiaotuxian = () => {
     const data = {
@@ -46,16 +48,15 @@ const loginxiaotuxian = () => {
         async (value) => {
             if(value) {
                 // 在这里的话就是这个可以实现的就是这个获取后台数据的一个统一出发的地方
-                await loginuserinformation(data)
+                await userstore.getuserinformation(data)
                 ElMessage.success('登录成功');
                 route.push('/')
             }
         }
     )
-    
+
 }
 </script>
-
 
 <template>
   <div>

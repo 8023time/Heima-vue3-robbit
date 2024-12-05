@@ -1,17 +1,24 @@
 <script setup>
+import { UseUserStore } from '@/stores/usre';
 
+const userstore = UseUserStore()
+
+// 清除用户的基本信息
+const clearuserinformation = () => {
+  userstore.userinformation = ''
+}
 </script>
 
 <template>
   <nav class="app-topnav">
     <div class="container">
       <ul>
-        <template v-if="false">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a></li>
+        <template v-if="userstore.userinformation.token">
+          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{userstore.userinformation.account}}</a></li>
           <li>
             <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
               <template #reference>
-                <a href="javascript:;">退出登录</a>
+                <a href="javascript:;" @click="clearuserinformation">退出登录</a>
               </template>
             </el-popconfirm>
           </li>
